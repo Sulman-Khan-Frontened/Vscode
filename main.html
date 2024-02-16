@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- links -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+            font-family: "Arial";
+            color: white;
+        }
+
+        .strike-through {
+            text-decoration: line-through !important;
+        }
+
+        .all-container {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            /* position: relative; */
+        }
+
+        :root {
+            --main-color: rgb(102, 140, 255);
+            --not-active: rgba(255, 242, 224, 0.384);
+            --prompt-box: rgba(219, 219, 219, 0.281);
+        }
+
+        .alert {
+            position: absolute;
+            bottom: 10px;
+            right: 010px;
+            width: 450px;
+            min-height: 100px;
+            z-index: 10;
+            background-color: var(--prompt-box);
+            pointer-events: all;
+            transition: 0.3s linear;
+        }
+
+        .top {
+            width: 100%;
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-inline-end: 0%;
+        }
+
+        .alert {
+            outline: 1px solid;
+            outline-color: var(--main-color);
+        }
+
+        .top>button {
+            width: 35px;
+            height: 35px;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            font-size: 19px;
+            cursor: pointer;
+        }
+
+        .top>button:active {
+            background-color: var(--prompt-box);
+        }
+
+
+        .alert.off {
+            z-index: -1;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .text {
+            width: 100%;
+            height: 80%;
+            padding: 3px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .text>svg {
+            height: 15px;
+            margin-inline: 10px;
+            fill: var(--main-color);
+        }
+
+        @import url('part/_options.css');
+
+        nav {
+            width: 100%;
+            height: 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-inline: 10px;
+            background-color: #3E3E3F;
+        }
+
+        .nav_left {
+            width: 500px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav_left>.shortcut {
+            width: 20%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+
+        .nav_left>.shortcut>img {
+            transform: scale(0.5);
+        }
+
+        .options-containers {
+            width: 80%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            list-style: none;
+        }
+
+        .options-containers>li>button {
+            user-select: none;
+            background-color: transparent;
+            outline: none;
+            border: none;
+            color: white;
+            font-weight: 100;
+            font-size: 14px;
+            cursor: default;
+            position: relative;
+        }
+
+        .dropDown {
+            position: absolute;
+            min-width: 250px;
+            height: fit-content;
+            background-color: #3E3E3F;
+            padding: 10px;
+            box-shadow: 0px 0px 2px rgba(150, 150, 150, 0.651);
+            border-radius: 5px;
+            left: 0;
+            top: 150%;
+            opacity: 0;
+            transform: scale(0);
+            transform-origin: top left;
+            transition: 0.3s linear;
+        }
+
+        .dropDown.Drop {
+            opacity: 1;
+            transform: scale(1);
+            user-select: none;
+            z-index: 100;
+        }
+
+        .dropDown>li {
+            border-radius: 4px;
+            width: 100%;
+            height: 10px;
+            display: flex;
+            padding-block: 15px;
+            align-items: center;
+            justify-content: flex-start;
+            padding-inline-start: 10px;
+            font-size: 15px !important;
+        }
+
+        .dropDown>li:hover {
+            background-color: rgba(255, 242, 224, 0.384);
+        }
+
+        .dropDown>hr {
+            margin-block: 10px;
+            height: 1px;
+            border: none;
+            outline: none;
+            background-color: #979797 !important;
+        }
+
+        .file-shower {
+            width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-name:read-only {
+            font-style: italic;
+            width: 100px;
+            height: 100%;
+            background-color: transparent;
+            outline: none;
+            border: none;
+        }
+
+        .file-name:not(:read-only) {
+            background-color: transparent;
+            outline: none !important;
+            border-color: white;
+        }
+
+        .nav_right {
+            width: 150px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        .nav_right>.icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            border: none;
+            background-color: transparent;
+        }
+
+        .nav_right>.icon>svg {
+            /* height: 80%; */
+            transition: 0.3s linear;
+            fill: white;
+            height: 50% !important;
+        }
+
+        .close:hover {
+            background-color: red !important;
+        }
+
+        .expand:hover {
+            background-color: royalblue;
+        }
+
+
+
+        .dropDown>li {
+            position: relative;
+        }
+
+        .dropDown>li:not(.auto-save)>.before {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: fit-content;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 10px;
+        }
+
+        .auto-save .before {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            right: 10px;
+            border-inline-start: 2px solid transparent;
+            border-block-end: 2px solid transparent;
+            transform: rotate(-45deg) translateY(-50%) scale(0);
+            transition: 0.2s linear;
+        }
+
+        .auto-save.saving>.before {
+            border-color: var(--not-active) !important;
+            transform: rotate(-45deg) translateY(-50%) scale(1);
+        }
+
+        .main-container {
+            width: 100%;
+            height: 95%;
+            display: flex;
+            background-color: #1E1E1E;
+        }
+
+        .sidebar {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            background-color: #272822;
+        }
+
+        .sidebar>.static_sidebar {
+            width: 20% !important;
+        }
+
+        .sidebar>.static_sidebar {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            flex-direction: column !important;
+            width: 15%;
+            height: 100%;
+            background-color: #333330;
+            padding-block: 20px;
+        }
+
+        .static_sidebar>.links {
+            width: 100%;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: column;
+        }
+
+        .links>.link {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-block: 10px;
+        }
+
+        .links>.link>svg {
+            fill: rgb(255, 255, 255, 0.5);
+        }
+
+        .links>.link.active-link>svg,
+        .links>.link:hover>svg {
+            fill: rgb(255, 255, 255, 0.9) !important;
+        }
+
+        .sidebar .dynamic_sidebar {
+            width: 85% !important;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #1E1F1C;
+        }
+
+        .dynamic_sidebar>.sidebarContent {
+            transform: scale(0);
+            width: 0 !important;
+            height: 0 !important;
+            overflow-y: hidden;
+            transition: opacity 0.3s linear;
+            opacity: 0;
+        }
+
+        .dynamic_sidebar>.sidebarContent.activeSidebarContent {
+            opacity: 1;
+            transform: scale(1);
+            width: 100% !important;
+            height: 100% !important;
+            display: flex;
+            background-color: #272822;
+        }
+
+        .explorer {
+            width: 100%;
+            height: 30%;
+        }
+
+        .explorer>div:first-child {
+            width: 100%;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-inline-start: 10px;
+            font-size: 10px;
+            font-weight: 300;
+        }
+
+        .files {
+            width: 100%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            padding-block: 10px;
+        }
+
+        .file- {
+            width: 100%;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-inline-start: 20px;
+            background-color: rgba(255, 255, 255, 0);
+            cursor: pointer !important;
+            margin-block: 1px;
+        }
+
+        .file-.active-file,
+        .file-:hover {
+            background-color: #636150;
+        }
+
+        .file->* {
+            margin-right: 15px;
+        }
+
+        .file->svg {
+            height: 60%;
+        }
+
+
+        .main-content {
+            width: 75%;
+            height: 100%;
+            background-color: red;
+        }
+    </style>
+    <title>Vscode</title>
+</head>
+
+<body>
+    <section class="all-container">
+        <div class="alert off">
+            <div class="top">
+                <button class="alert-close">&times;</button>
+            </div>
+            <p class="text">
+            </p>
+        </div>
+        <nav>
+            <div class="nav_left">
+                <div class="shortcut"><img src="favicon.ico" alt=""></div>
+                <ul class="options-containers">
+                    <li><button>File
+                            <ul class="dropDown ">
+                                <li>New File
+                                    <div class="before"><kbd>Ctrl</kbd>+<kbd>N</kbd></div>
+                                </li>
+                                <li>New Text
+                                    <div class="before">
+                                        <kbd>Ctrl</kbd> + <kbd>Shift</kbd>+<kbd>Windows</kbd>+<kbd>N</kbd>
+                                    </div>
+                                </li>
+                                <li class="" onclick="newWindow()">New Window
+                                    <div class="before">
+                                        <kbd>Ctrl</kbd> + <kbd>Shift</kbd>+<kbd>N</kbd>
+                                    </div>
+                                </li>
+                                <hr>
+                                <li>Open File</li>
+                                <li>Open Text</li>
+                                <li>Open Window</li>
+                                <hr>
+                                <li>Save to Browser Storage</li>
+                                <li>Save as</li>
+                                <li class="auto-save -save">Auto save <div class="before"></div>
+                                </li>
+                                <hr>
+                                <li class="close-window">Exit</li>
+                            </ul>
+                        </button></li>
+                    <li><button>Selection
+                            <div class="dropDown">
+                    <li>Select Active Line
+                        <div class="before">
+                            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Home</kbd>
+                        </div>
+                    </li>
+                    <li>Select Word
+                        <div class="before">
+                            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd>
+                        </div>
+                    </li>
+                    <li>Select All
+                        <div class="before">
+                            <kbd>Ctrl</kbd>+<kbd>A</kbd>
+                        </div>
+                    </li>
+                    <hr>
+                    <li>Move Line Up
+                        <div class="before">
+                            <kbd>Shift</kbd>+<kbd>Up Arrow</kbd>
+                        </div>
+                    </li>
+                    <li>Move Line Down
+                        <div class="before">
+                            <kbd>Shift</kbd>+<kbd>Down Arrow</kbd>
+                        </div>
+                    </li>
+                    <li>Copy Line Down
+                        <div class="before">
+                            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Down Arrow</kbd>
+                        </div>
+                    </li>
+                    <li>Copy Line Down
+                        <div class="before">
+                            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Up Arrow</kbd>
+                        </div>
+                    </li>
+            </div>
+            </button></li>
+            <li><button>View
+                    <div class="dropDown">
+            <li>Full View</li>
+            <li>Decrease Font Size</li>
+            <li>Increase Font Size</li>
+            <hr>
+            <li class="wrapping wrapper">Line Wrap
+                <div class="before">Wrapping</div>
+            </li>
+            </div>
+            </button></li>
+            <li><button>Run
+                    <div class="dropDown">
+            <li>Run
+                <div class="before"><kbd>F10</kbd></div>
+            </li>
+            <li class="strike-through">Run & Debug
+                <div class="before"><kbd>F11</kbd></div>
+            </li>
+            <hr>
+            </div>
+            </button></li>
+            <li><button>Terminal
+                    <div class="dropDown">
+            <li class="strike-through">New Terminal
+                <div class="before"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>N</kbd></div>
+            </li>
+            <li class="strike-through">Kill Terminal
+                <div class="before"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>D</kbd></div>
+            </li>
+            <hr>
+            </div>
+            </button></li>
+            <li><button>Help
+                    <div class="dropDown">
+            <li>Get Started</li>
+            <li>Show All Commands</li>
+            <li>Editor Tips</li>
+            <li>Release Notes</li>
+            <hr>
+            <li>Keyboard Shortcuts</li>
+            <li>Video Tutorials</li>
+            <li>About</li>
+            <hr>
+            <li>Follow us On X</li>
+            <li>Follow us On Facebook</li>
+            <li>Follow us On Instagram</li>
+            <hr>
+            <li>About</li>
+            </div>
+            </button></li>
+            </ul>
+            </div>
+            <div class="file-shower">
+                <input class="file-name" type="text" value="index.html" data-change-name-target=".active-file > input"
+                    readonly>
+                <pre> || </pre>
+                <p class="static">Vscode</p>
+            </div>
+            <div class="nav_right">
+                <button class="icon expand" id="fullscreen-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path
+                            d="M0 180V56c0-13.3 10.7-24 24-24h124c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H64v84c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12zM288 44v40c0 6.6 5.4 12 12 12h84v84c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12V56c0-13.3-10.7-24-24-24H300c-6.6 0-12 5.4-12 12zm148 276h-40c-6.6 0-12 5.4-12 12v84h-84c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h124c13.3 0 24-10.7 24-24V332c0-6.6-5.4-12-12-12zM160 468v-40c0-6.6-5.4-12-12-12H64v-84c0-6.6-5.4-12-12-12H12c-6.6 0-12 5.4-12 12v124c0 13.3 10.7 24 24 24h124c6.6 0 12-5.4 12-12z" />
+                    </svg>
+                </button>
+                <button class="icon close-window">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+                        <path
+                            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="static_sidebar">
+                    <div class="first-links links">
+                        <div class="link active-link" data-target=".files">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" width="25">
+                                <path
+                                    d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640H447l-80-80H160v480l96-320h684L837-217q-8 26-29.5 41.5T760-160H160Zm84-80h516l72-240H316l-72 240Zm0 0 72-240-72 240Zm-84-400v-80 80Z" />
+                            </svg>
+                        </div>
+                        <div class="link" data-target=".extension">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" width="25">
+                                <path
+                                    d="M352-120H200q-33 0-56.5-23.5T120-200v-152q48 0 84-30.5t36-77.5q0-47-36-77.5T120-568v-152q0-33 23.5-56.5T200-800h160q0-42 29-71t71-29q42 0 71 29t29 71h160q33 0 56.5 23.5T800-720v160q42 0 71 29t29 71q0 42-29 71t-71 29v160q0 33-23.5 56.5T720-120H568q0-50-31.5-85T460-240q-45 0-76.5 35T352-120Zm-152-80h85q24-66 77-93t98-27q45 0 98 27t77 93h85v-240h80q8 0 14-6t6-14q0-8-6-14t-14-6h-80v-240H480v-80q0-8-6-14t-14-6q-8 0-14 6t-6 14v80H200v88q54 20 87 67t33 105q0 57-33 104t-87 68v88Zm260-260Z" />
+                            </svg>
+                        </div>
+                        <div class="link" data-target=".search">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" width="25">
+                                <path
+                                    d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                            </svg>
+                        </div>
+                        <div class="link" data-target=".debug">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" width="25">
+                                <path
+                                    d="M200-520v-40q0-72 32.5-131.5T320-789l-75-75 35-36 85 85q26-12 55.5-18.5T480-840q30 0 59.5 6.5T595-815l85-85 35 36-75 75q55 38 87.5 97.5T760-560v40H200Zm400-80q17 0 28.5-11.5T640-640q0-17-11.5-28.5T600-680q-17 0-28.5 11.5T560-640q0 17 11.5 28.5T600-600Zm-240 0q17 0 28.5-11.5T400-640q0-17-11.5-28.5T360-680q-17 0-28.5 11.5T320-640q0 17 11.5 28.5T360-600ZM480-40q-117 0-198.5-81.5T200-320v-160h560v160q0 117-81.5 198.5T480-40Z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="second-links links">
+                        <div class="link">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                <path
+                                    d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z" />
+                            </svg>
+                        </div>
+                        <div class="link">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                                <path
+                                    d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="dynamic_sidebar">
+                    <div class="sidebarContent activeSidebarContent files">
+                        <div class="explorer">
+                            <div>
+                                <h1>Explorer</h1>
+                            </div>
+                            <div class="files">
+                                <div class="file- active-file">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                        <path
+                                            d="M0 32l34.9 395.8L191.5 480l157.6-52.2L384 32H0zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1l-4.4 47.7z"
+                                            fill="#e34c26" />
+                                    </svg>
+                                    <input data-change-name=".hello,.see" type="text" name="" id="first-file-name"
+                                        value="index.html" class="file-name" readonly>
+                                </div>
+                                <div class="file- ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path
+                                            d="M480 32l-64 368-223.3 80L0 400l19.6-94.8h82l-8 40.6L210 390.2l134.1-44.4 18.8-97.1H29.5l16-82h333.7l10.5-52.7H56.3l16.3-82H480z"
+                                            fill=" rgb(0, 162, 255)" />
+                                    </svg>
+                                    <input data-change-name=".hello,.see" type="text" name="" id="second-file-name"
+                                        value="main.css" class="file-name" readonly>
+                                </div>
+                                <div class="file- ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                        <path
+                                            d="M0 32v448h448V32H0zm243.8 349.4c0 43.6-25.6 63.5-62.9 63.5-33.7 0-53.2-17.4-63.2-38.5l34.3-20.7c6.6 11.7 12.6 21.6 27.1 21.6 13.8 0 22.6-5.4 22.6-26.5V237.7h42.1v143.7zm99.6 63.5c-39.1 0-64.4-18.6-76.7-43l34.3-19.8c9 14.7 20.8 25.6 41.5 25.6 17.4 0 28.6-8.7 28.6-20.8 0-14.4-11.4-19.5-30.7-28l-10.5-4.5c-30.4-12.9-50.5-29.2-50.5-63.5 0-31.6 24.1-55.6 61.6-55.6 26.8 0 46 9.3 59.8 33.7L368 290c-7.2-12.9-15-18-27.1-18-12.3 0-20.1 7.8-20.1 18 0 12.6 7.8 17.7 25.9 25.6l10.5 4.5c35.8 15.3 55.9 31 55.9 66.2 0 37.8-29.8 58.6-69.7 58.6z"
+                                            fill="rgb(255, 208, 0)" />
+                                    </svg>
+                                    <input type="text" name="" id="third-file-name" value="main.js" class="file-name"
+                                        readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebarContent extension">
+                        extension
+                    </div>
+                    <div class="sidebarContent search">search</div>
+                    <div class="sidebarContent debug">
+                        debug
+                    </div>
+                </div>
+            </div>
+            <div class="main-content">
+
+            </div>
+        </div>
+    </section>
+    <script>
+
+    </script>
+</body>
+
+</html>
