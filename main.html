@@ -682,6 +682,187 @@
         </div>
     </section>
     <script>
+        //  Auto Alert Box Off
+let off = () => {
+    if (alerted.classList.contains("on")) {
+        setTimeout(() => {
+            alerted.classList.remove("on")
+            alerted.classList.add("off")
+        }, 4000)
+    }
+}
+
+
+
+// Drop Downs Logic
+var dropDownButtons = document.querySelectorAll(".options-containers > li > button");
+dropDownButtons.forEach(button => {
+    button.addEventListener("click", e => {
+        if (e.target.tagName === "BUTTON") {
+            document.querySelectorAll(".dropDown").forEach(dropDown => dropDown.classList.remove("Drop"));
+            let target = e.target.querySelector(".dropDown");
+            target.classList.add("Drop");
+        }
+    });
+});
+
+
+// Off DropDown
+document.addEventListener("mouseup", (e) => {
+    if (!e.target.classList.contains("dropDown")) {
+        document.querySelectorAll(".dropDown").forEach(e => e.classList.remove("Drop"));
+    }
+});
+
+
+// auto-save Logic
+var saver = document.querySelector(".auto-save");
+saver.addEventListener("mousedown", () => {
+    if (!saver.classList.contains("saving")) {
+        alerted.classList.remove("off")
+        alerted.classList.add("on");
+        alerted.querySelector(".text").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg>:  Auto Save On`;
+        localStorage.setItem('saving', 'on');
+        off();
+    } else {
+        alerted.classList.remove("off")
+        alerted.classList.add("on");
+        alerted.querySelector(".text").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg>:  Auto Save Off`;
+        localStorage.setItem('saving', 'off');
+        off();
+    }
+    saver.classList.toggle("saving");
+})
+
+
+//  Alert Close
+var closeAlert = document.querySelector(".alert-close");
+var alerted = document.querySelector(".alert");
+closeAlert.addEventListener("click", () => {
+    alerted.classList.add("off");
+});
+
+
+//  save auto save to localstorage
+var saving = localStorage.getItem('saving');
+if (saving) {
+    saver.classList.add("saving");
+}
+if (saving == "off") {
+    saver.classList.remove("saving");
+}
+
+
+// Window Close
+document.querySelectorAll(".close-window").forEach(e => {
+    e.addEventListener("click", () => {
+        window.close(location.pathname);
+    })
+})
+
+
+
+//  New Window
+
+function newWindow() {
+    let url = location.pathname;
+    window.open(url, "_blank");
+}
+
+
+// Wrapping script
+var Wrapper = document.querySelector(".wrapper");
+Wrapper.addEventListener("click", () => {
+    if (Wrapper.classList.contains("wrapping")) {
+        Wrapper.classList.remove("wrapping");
+        Wrapper.querySelector(".before").textContent = "Not Wrapping";
+        localStorage.removeItem('wrapping');
+    } else {
+        Wrapper.classList.add("wrapping");
+        Wrapper.querySelector(".before").textContent = "Wrapping";
+        localStorage.setItem('wrapping', 'on');
+    }
+});
+
+// Implement On Reload Wrapping
+document.addEventListener("DOMContentLoaded", () => {
+    let wrappering = localStorage.getItem('wrapping');
+    if (wrappering) {
+        Wrapper.querySelector(".before").textContent = "Wrapping";
+        Wrapper.classList.add("wrapping");
+        console.log("Wrapping");
+    } else {
+        Wrapper.querySelector(".before").textContent = "Not Wrapping";
+        Wrapper.classList.remove("wrapping");
+        console.log("Not Wrapping");
+    }
+})
+
+
+
+
+// Full screen Toggling
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+fullscreenBtn.addEventListener('click', () => {
+    if (document.fullscreenElement) {
+        exitFullscreen();
+    } else {
+        enterFullscreen();
+    }
+});
+
+function enterFullscreen() {
+    const element = document.documentElement;
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    }
+}
+
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
+
+// Static Side Link Toggler
+var Link = document.querySelectorAll(".first-links > .link");
+var sidebarContent = document.querySelectorAll(".sidebarContent");
+Link.forEach(link => {
+    link.addEventListener("click", targetLink => {
+        Link.forEach(e => e.classList.remove("active-link"));
+        sidebarContent.forEach(e => e.classList.remove("activeSidebarContent"));
+        targetLink.currentTarget.classList.add("active-link");
+        var selector = targetLink.currentTarget.getAttribute("data-target");
+        var targettedSidebarContent = document.querySelector(selector);
+        targettedSidebarContent.classList.add('activeSidebarContent');
+
+        
+    })
+})
+
+
+
+// File Toggling Of sidebar
+var sidebarFile = document.querySelectorAll(".file-");
+sidebarFile.forEach(e => {
+    e.addEventListener("click", file => {
+        sidebarFile.forEach(e => e.classList.remove("active-file"));
+        file.currentTarget.classList.add("active-file");
+
+        console.log(document.querySelector(".file-shower > .file-name").value = file.currentTarget.querySelector("input").value);
+    });
+});
+
+
 
     </script>
 </body>
